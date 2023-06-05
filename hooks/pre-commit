@@ -1,0 +1,17 @@
+#!/bin/sh
+
+echo "*****Run linter*****"
+./gradlew app:ktlintCheck --daemon
+status=$?
+
+[ $status -ne 0 ] && exit 1
+echo "*****Done with linter*****"
+
+echo "*****Running unit tests******"
+git stash -q --keep-index
+./gradlew test
+status2=$?
+git stash pop -q
+echo "*****Done with unit tests******"
+
+exit $status2
